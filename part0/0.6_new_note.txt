@@ -1,0 +1,18 @@
+note over browser:
+User types in body text of the note
+end note
+
+note over browser:
+User submits the form
+end note
+
+
+note over browser:
+The event handler:
+1) creates a new note
+2) adds it to the notes list
+3) rerenders the note list on the page
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: [201 - success status response]

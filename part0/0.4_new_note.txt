@@ -1,0 +1,34 @@
+note over browser:
+User types in body text of the note
+end note
+
+note over browser:
+User submits the form
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+server-->browser: [302 - redirect status response] redirects to '/exampleapp/notes'
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{"content":"s/o LMF","date":"2020-09-11T08:31:16.793Z"},...]
+
+
+browser->server: https://studies.cs.helsinki.fi/favicon.ico
+server-->browser: HTML-code
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note
