@@ -12,8 +12,10 @@ export const AddUserForm = ({
   setErrorMessage,
 }) => {
   // Displays error message for 3 seconds
-  const displayErrorMessage = () => {
-    setErrorMessage(`Person '${newName}' was already removed from server`);
+  const displayErrorMessage = (error) => {
+    console.log(error.response.data.error);
+    const errorText = error.response.data.error;
+    setErrorMessage(errorText);
     setTimeout(() => {
       setErrorMessage(null);
     }, 3000);
@@ -59,7 +61,7 @@ export const AddUserForm = ({
             setNewNumber('');
             setPersons(updatedPersonList);
           })
-          .catch((_) => displayErrorMessage());
+          .catch((e) => displayErrorMessage(e));
       }
     } else {
       // Creates a new contact
@@ -70,13 +72,16 @@ export const AddUserForm = ({
       };
 
       // Saves data in db.json
-      personService.addPerson(newPerson).then((_) => {
-        // Updates person List & resets local state
-        setPersons([...persons, newPerson]);
-        setNewName('');
-        setNewNumber('');
-        displaySuccessMessage();
-      });
+      personService
+        .addPerson(newPerson)
+        .then((_) => {
+          // Updates person List & resets local state
+          setPersons([...persons, newPerson]);
+          setNewName('');
+          setNewNumber('');
+          displaySuccessMessage();
+        })
+        .catch((e) => displayErrorMessage(e));
     }
   };
 

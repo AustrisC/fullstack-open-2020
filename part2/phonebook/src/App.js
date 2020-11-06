@@ -15,9 +15,7 @@ const App = () => {
 
   // Fetches initial data
   useEffect(() => {
-    console.log('effect');
     personService.getAll().then((response) => {
-      console.log('promise fulfilled');
       setPersons(response.data);
     });
   }, []);

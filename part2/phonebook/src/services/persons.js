@@ -1,8 +1,9 @@
 import axios from 'axios';
-const BASE_URL = 'api/persons';
+const BASE_URL = '/api/persons';
 
 const getAll = () => {
   return axios.get(BASE_URL);
+  // return request.then(response => response.data)
 };
 
 const addPerson = (person) => {
