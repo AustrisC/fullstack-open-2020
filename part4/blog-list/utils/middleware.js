@@ -15,12 +15,9 @@ const unknownEndpoint = (_, response) => {
 const errorHandler = (error, _, response, next) => {
   logger.error(error.message);
 
-  console.log('reaches middleware');
-
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
-    console.log('reaches here');
     return response.status(400).json({ error: error.message });
   }
 
