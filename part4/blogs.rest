@@ -1,0 +1,8 @@
+post http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF1c3RyZWVuYyIsImlkIjoiNjAzYTc3NGRlYjBiODExNzkzM2Y4MDU3IiwiaWF0IjoxNjE0NDQ0NTE2fQ.CFQhXSlrAf9NYMNhLAf330J-_UOqM2jSclv-qJo4_xc
+
+{
+  "title": "Test title",
+  "url": "cool.story.bro"
+}
