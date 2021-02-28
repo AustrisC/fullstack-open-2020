@@ -104,6 +104,16 @@ describe('Viewing a specific blog entry', () => {
 
     expect(blogs).toHaveLength(helper.initialBlogs.length);
   });
+
+  test('throws a 401 error when auth token is absent', async () => {
+    const newBlog = {
+      title: 'Not going to work',
+      author: 'Austris',
+      likes: 99,
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(401);
+  });
 });
 
 describe('Deleting a blog entry', () => {

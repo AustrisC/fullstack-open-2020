@@ -3,14 +3,6 @@ const jwt = require('jsonwebtoken');
 const Blog = require('../models/blogs');
 const User = require('../models/user');
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.get('/', async (_, response) => {
   const blogs = await Blog.find({}).populate('user');
   response.json(blogs.map((blog) => blog.toJSON()));
@@ -19,9 +11,10 @@ blogsRouter.get('/', async (_, response) => {
 blogsRouter.post('/', async (request, response) => {
   const { body } = request;
 
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
+  console.log('REQUEST', request.token);
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
 
@@ -39,7 +32,7 @@ blogsRouter.post('/', async (request, response) => {
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
 
-  response.status(201).json(savedBlog.toJSON());
+  response.status(201).json(savedBlog);
 });
 
 blogsRouter.get('/:id', async (request, response) => {
@@ -54,13 +47,23 @@ blogsRouter.get('/:id', async (request, response) => {
 });
 
 blogsRouter.delete('/:id', async (request, response) => {
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
 
   const { id } = request.params;
+  const blog = await Blog.findById(id);
+
+  if (!blog) {
+    return response
+      .status(400)
+      .json({ error: 'Invalid blog id upon deleting' });
+  }
+
+  if (blog.user.toString() !== decodedToken.id) {
+    return response.status(401).json({ error: 'User cannot perform deletion' });
+  }
 
   await Blog.findByIdAndRemove(id);
   response.status(204).end();
